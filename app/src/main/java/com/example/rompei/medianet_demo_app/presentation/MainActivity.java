@@ -2,17 +2,22 @@ package com.example.rompei.medianet_demo_app.presentation;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.rompei.medianet_demo_app.R;
 import com.example.rompei.medianet_demo_app.dummy.api.DummyApi;
 import com.example.rompei.medianet_demo_app.dummy.models.DummyEntity;
@@ -28,6 +33,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit.RestAdapter;
 import retrofit.android.AndroidLog;
 import retrofit.converter.GsonConverter;
@@ -41,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     ProgressBar mProgress;
     @Bind(R.id.fab)
     FloatingActionButton mFab;
+    @Bind(R.id.root)
+    CoordinatorLayout mRootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +102,39 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @OnClick(R.id.fab)
+    public void onFavClicked(){
+        new MaterialDialog.Builder(this)
+                .title(R.string.send_reply_title)
+                .customView(R.layout.send_dialog_layout, true)
+                .positiveText(R.string.send)
+                .positiveColorRes(R.color.primary_color)
+                .negativeText(R.string.cancel)
+                .negativeColorRes(R.color.primary_dark)
+                .callback(new MaterialDialog.ButtonCallback() {
+                    @Override
+                    public void onPositive(MaterialDialog dialog) {
+                        super.onPositive(dialog);
+                        View view = dialog.getCustomView();
+                        if (view != null) {
+                            EditText name = ButterKnife.findById(view, R.id.reply_name);
+                            EditText text = ButterKnife.findById(view, R.id.reply_text);
+                            if (text.getText() != null && !text.getText().toString().equals("")) {
+                                Log.d("Dialog", "name : " + name.getText() + " text : " + text.getText());
+                            } else {
+                                Snackbar.make(mRootView, getString(R.string.send_error), Snackbar.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onNegative(MaterialDialog dialog) {
+                        super.onNegative(dialog);
+                    }
+                })
+                .show();
     }
 
 

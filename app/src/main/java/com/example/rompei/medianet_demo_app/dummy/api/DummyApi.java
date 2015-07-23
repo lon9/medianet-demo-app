@@ -12,5 +12,5 @@ import rx.Observable;
  */
 public interface DummyApi {
     @GET("/data/2.5/{name}")
-    public Observable<DummyEntity> get(@Path("name") String name, @Query("q") String q);
+    Observable<DummyEntity> get(@Path("name") String name, @Query("q") String q);
 }

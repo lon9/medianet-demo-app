@@ -1,4 +1,4 @@
-package com.example.rompei.medianet_demo_app.api.models;
+package com.example.rompei.medianet_demo_app.bgm.models;
 
 import java.util.List;
 

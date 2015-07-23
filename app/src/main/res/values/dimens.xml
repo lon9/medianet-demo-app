@@ -2,4 +2,6 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="send_reply_title">14sp</dimen>
+    <dimen name="send_reply_content">16sp</dimen>
 </resources>
