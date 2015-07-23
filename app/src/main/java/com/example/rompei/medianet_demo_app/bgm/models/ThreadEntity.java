@@ -9,8 +9,12 @@ public class ThreadEntity {
 
     public List<Thread> threads;
 
-    public class Thread{
+    public static class Thread{
         public String name;
         public String text;
+        public Thread(String name, String text){
+            this.name=name;
+            this.text=text;
+        }
     }
 }

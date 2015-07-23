@@ -20,5 +20,5 @@ public interface ThreadApi {
     Observable<ThreadEntity> get();
 
     @POST("/api/bbs.php")
-    Observable<ThreadEntity> post(@Body ThreadEntity.Thread thread, retrofit.Callback<ThreadEntity.Thread> cb);
+    Observable<ThreadEntity.Thread> post(@Body ThreadEntity.Thread thread);
 }
