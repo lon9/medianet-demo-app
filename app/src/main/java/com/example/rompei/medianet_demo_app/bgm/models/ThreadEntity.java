@@ -7,12 +7,12 @@ import java.util.List;
  */
 public class ThreadEntity {
 
-    public List<Thread> threads;
+    public List<Reply> reply;
 
-    public static class Thread{
+    public static class Reply {
         public String name;
         public String text;
-        public Thread(String name, String text){
+        public Reply(String name, String text){
             this.name=name;
             this.text=text;
         }

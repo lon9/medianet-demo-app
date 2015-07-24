@@ -3,13 +3,11 @@ package com.example.rompei.medianet_demo_app.presentation;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,14 +20,11 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.rompei.medianet_demo_app.R;
 import com.example.rompei.medianet_demo_app.bgm.api.ThreadApi;
 import com.example.rompei.medianet_demo_app.bgm.models.ThreadEntity;
-import com.example.rompei.medianet_demo_app.dummy.api.DummyApi;
-import com.example.rompei.medianet_demo_app.dummy.models.DummyEntity;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.bind.DateTypeAdapter;
 
-import java.awt.font.TextAttribute;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,11 +32,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit.Callback;
 import retrofit.RestAdapter;
-import retrofit.RetrofitError;
 import retrofit.android.AndroidLog;
-import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import rx.Observer;
 import rx.schedulers.Schedulers;
@@ -56,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.swipeLayout)
     SwipeRefreshLayout mSwipeLayout;
 
-    private Gson mGson;
     private RestAdapter mAdapter;
     private MyAdapter mRecyclerAdapter;
 
@@ -77,14 +68,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        mGson = new GsonBuilder()
+        Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .registerTypeAdapter(Date.class, new DateTypeAdapter())
                 .create();
 
         mAdapter = new RestAdapter.Builder()
                 .setEndpoint("http://medianet.inf.uec.ac.jp/~t1310077")
-                .setConverter(new GsonConverter(mGson))
+                .setConverter(new GsonConverter(gson))
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setLog(new AndroidLog("=NETWORK="))
                 .build();
@@ -130,11 +121,11 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     if(mRecycler.getAdapter()==null) {
-                                        mRecyclerAdapter = new MyAdapter(MainActivity.this, threadEntity.threads);
+                                        mRecyclerAdapter = new MyAdapter(MainActivity.this, threadEntity.reply);
                                         mRecycler.setAdapter(mRecyclerAdapter);
                                     } else{
                                         mRecyclerAdapter.clearAll();
-                                        mRecyclerAdapter.addAll(threadEntity.threads);
+                                        mRecyclerAdapter.addAll(threadEntity.reply);
                                     }
 
                                 }
@@ -145,10 +136,10 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private void postReply(ThreadEntity.Thread reply){
+    private void postReply(ThreadEntity.Reply reply){
         mAdapter.create(ThreadApi.class).post(reply)
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(new Observer<ThreadEntity.Thread>() {
+                .subscribe(new Observer<ThreadEntity.Reply>() {
                     @Override
                     public void onCompleted() {
                         Log.d("MainActivity", "onCompleted()");
@@ -167,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onNext(ThreadEntity.Thread thread) {
+                    public void onNext(ThreadEntity.Reply thread) {
                         Log.d("MainActivity", "onNext()");
                         Log.d("MainActivity", thread.toString());
                     }
@@ -200,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
                                 Log.d("Dialog", "name : " + name.getText() + " text : " + text.getText());
                                 if (name.getText().toString().equals(""))
                                     name.setText(R.string.name_placeholder);
-                                ThreadEntity.Thread reply = new ThreadEntity.Thread(name.getText().toString(), text.getText().toString());
+                                ThreadEntity.Reply reply = new ThreadEntity.Reply(name.getText().toString(), text.getText().toString());
                                 postReply(reply);
                             } else {
                                 Snackbar.make(mRootView, getString(R.string.send_error), Snackbar.LENGTH_SHORT).show();
@@ -219,9 +210,9 @@ public class MainActivity extends AppCompatActivity {
 
     private class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
         private LayoutInflater mInflater;
-        private List<ThreadEntity.Thread> mItems;
+        private List<ThreadEntity.Reply> mItems;
 
-        public MyAdapter(Context context, List<ThreadEntity.Thread> items) {
+        public MyAdapter(Context context, List<ThreadEntity.Reply> items) {
             if(items != null)
                 this.mItems = items;
             else
@@ -237,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            ThreadEntity.Thread thread= mItems.get(position);
+            ThreadEntity.Reply thread= mItems.get(position);
             holder.name.setText(thread.name);
             holder.text.setText(thread.text);
         }
@@ -252,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
             notifyDataSetChanged();
         }
 
-        public void addAll(List<ThreadEntity.Thread> threads){
+        public void addAll(List<ThreadEntity.Reply> threads){
             mItems.addAll(threads);
             notifyDataSetChanged();
         }

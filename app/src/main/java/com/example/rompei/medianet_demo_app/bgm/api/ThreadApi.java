@@ -2,14 +2,9 @@ package com.example.rompei.medianet_demo_app.bgm.api;
 
 import com.example.rompei.medianet_demo_app.bgm.models.ThreadEntity;
 
-import javax.security.auth.callback.Callback;
-
 import retrofit.http.Body;
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.POST;
-import retrofit.http.Path;
 import rx.Observable;
 
 /**
@@ -20,5 +15,5 @@ public interface ThreadApi {
     Observable<ThreadEntity> get();
 
     @POST("/api/bbs.php")
-    Observable<ThreadEntity.Thread> post(@Body ThreadEntity.Thread thread);
+    Observable<ThreadEntity.Reply> post(@Body ThreadEntity.Reply thread);
 }
