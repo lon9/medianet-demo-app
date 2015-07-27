@@ -11,5 +11,5 @@
     <string name="cancel">キャンセル</string>
     <string name="send_error">投稿内容を入力してください!</string>
     <string name="post_message">投稿しました</string>
-    <string name="name_placeholder">名無しの電通太郎</string>
+    <string name="name_placeholder">名無しの電通大生</string>
 </resources>

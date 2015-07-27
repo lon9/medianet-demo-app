@@ -85,7 +85,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void getThread(){
 
-        mProgress.setVisibility(View.VISIBLE);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mProgress.setVisibility(View.VISIBLE);
+            }
+        });
         mAdapter.create(ThreadApi.class).get()
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(new Observer<ThreadEntity>() {
@@ -160,7 +165,6 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onNext(ThreadEntity.Reply thread) {
                         Log.d("MainActivity", "onNext()");
-                        Log.d("MainActivity", thread.toString());
                     }
                 });
     }
